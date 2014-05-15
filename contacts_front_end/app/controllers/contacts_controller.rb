@@ -6,6 +6,7 @@ class ContactsController < ApplicationController
   end
 
   def show
+    @response = JSON.parse(Typhoeus.get('localhost:3000/show?format=json').body)
   end
 
   def new
@@ -43,11 +44,17 @@ class ContactsController < ApplicationController
 
   def new_email
     # Should return a view that allows the user to create an email
+    @contact = Contact.find_by_id(params[:id])
   end
 
   def send_email
     # Does the actual sending of the email by calling
     # the other rails server
+    
+    email_params = params.require(:email_info).permit(:email, :subject, :body)
+    email_params[:user_id] = current_user.id
+    EmailWorker.perform_async(email_params)
+    redirect_to root_path
   end
 
   def sent_email

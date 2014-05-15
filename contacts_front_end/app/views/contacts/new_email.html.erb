@@ -1,1 +1,7 @@
-TODO - add a form here for creating an email
+<form action="/contacts/<%=@contact.id%>/email" method="post">
+  <%= token_tag form_authenticity_token %>
+  Email: <input type="text" value=<%=@contact.email%> name="email_info[email]"> <br>
+  Subject: <input type="text" name="email_info[subject]"> <br>
+  Body: <input type="text" name="email_info[body]"> <br>
+  <input type = "submit">
+</form>
